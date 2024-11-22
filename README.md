@@ -27,6 +27,7 @@ Simply include the following action in your workflow.
     loki_address: "http://your-loki-instance:3100"
     loki_username: ${{ secrets.LOKI_USERNAME }}
     loki_password: ${{ secrets.LOKI_PASSWORD }}
+    loki_tenant: ${{ secrets.LOKI_TENANT }}
     labels: '{"key": "value"}'
 ```
 
@@ -37,6 +38,7 @@ Simply include the following action in your workflow.
 - `loki_address`: The URL to your Loki instance.
 - `loki_username`: The username for accessing Loki.
 - `loki_password`: The password for accessing Loki.
+- `loki_tenant`: The tenantid of the Loki tenant when multitenancy is enabled.
 - `labels`: A JSON string of key-value pairs to be attached as labels to the log message.(Optional)
 
 ## Labels Included in the Log

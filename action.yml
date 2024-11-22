@@ -16,6 +16,9 @@ inputs:
   loki_password:
     description: "Loki password for basic auth"
     required: true
+  loki_tenant:
+    description: "Loki tenant id if multitenancy is used. Default is fake."
+    required: false
   labels:
     description: "JSON string of labels to attach to the log message"
     required: false

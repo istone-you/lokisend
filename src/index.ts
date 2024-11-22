@@ -10,6 +10,7 @@ async function sendLog(): Promise<void> {
   const lokiAddress = core.getInput("loki_address");
   const lokiUsername = core.getInput("loki_username");
   const lokiPassword = core.getInput("loki_password");
+  var lokiTenant = core.getInput("loki_tenant"); // If unset or multitenancy is disabled, defaults to 'fake' (https://grafana.com/docs/loki/latest/operations/multi-tenancy/)
   const labelsInput = core.getInput("labels") || "{}";
   const timeFilePath = path.join(
     process.env.GITHUB_WORKSPACE || "",
@@ -41,6 +42,13 @@ async function sendLog(): Promise<void> {
     const executionDuration = Math.round((endTime - startTime) / 1000);
 
     labels["duration"] = `${executionDuration}`;
+  }
+  // If lokiTenant is not set, use the default tenant 'fake'
+  if (!lokiTenant) {
+    console.info(
+      "No Loki tenant provided. Defaulting to 'fake'. For more information, see https://grafana.com/docs/loki/latest/operations/multi-tenancy/"
+    );
+    lokiTenant = "fake";
   }
 
   const repositoryOwner = github.context.repo.owner;
@@ -77,7 +85,7 @@ async function sendLog(): Promise<void> {
       `${lokiAddress}/loki/api/v1/push`,
       logEntry,
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "X-Scope-OrgID": lokiTenant },
         auth: { username: lokiUsername, password: lokiPassword },
       }
     );
